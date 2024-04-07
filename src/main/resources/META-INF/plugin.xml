@@ -8,12 +8,12 @@
     <name>ProjectTabs</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="mail@rayman.me">Rayman</vendor>
+    <vendor email="mail@rayman.me">rayman13579</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
-    <description>Shows open projects as tabs in toolbar with the ability to switch between them</description>
+    <description>Easily see and navigate between your open projects directly from the toolbar.</description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
