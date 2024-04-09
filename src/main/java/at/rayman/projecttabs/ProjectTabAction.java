@@ -31,10 +31,6 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
 
     private static final Border BORDER_EMPTY = JBUI.Borders.empty();
 
-    private ProjectTabAction previousTab;
-
-    private ProjectTabAction nextTab;
-
     private String projectName;
 
     private String displayName;
@@ -43,20 +39,11 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
 
     private boolean isHovered = false;
 
-    public ProjectTabAction(String projectName, String projectLocation, ProjectTabAction previousTab) {
+    public ProjectTabAction(String projectName, String projectLocation) {
         super();
         this.projectName = projectName;
         this.displayName = projectName;
         this.projectLocation = projectLocation;
-        if (previousTab != null) {
-            this.previousTab = previousTab;
-            this.nextTab = previousTab.nextTab;
-            this.nextTab.previousTab = this;
-            this.previousTab.nextTab = this;
-        } else {
-            this.previousTab = this;
-            this.nextTab = this;
-        }
     }
 
     @Override
@@ -118,14 +105,6 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
         return null;
     }
 
-    public ProjectTabAction getPreviousTab() {
-        return previousTab;
-    }
-
-    public ProjectTabAction getNextTab() {
-        return nextTab;
-    }
-
     public String getProjectName() {
         return projectName;
     }
@@ -136,19 +115,6 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
 
     public String getProjectLocation() {
         return projectLocation;
-    }
-
-    public void dispose() {
-        if (previousTab == this) {
-            assert nextTab == this;
-            return;
-        }
-        if (nextTab == this) {
-            assert false;
-            return;
-        }
-        previousTab.nextTab = nextTab;
-        nextTab.previousTab = previousTab;
     }
 
     private JPanel buildTab(Presentation presentation, String place) {

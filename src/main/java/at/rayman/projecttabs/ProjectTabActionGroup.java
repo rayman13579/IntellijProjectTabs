@@ -9,8 +9,6 @@ import java.util.List;
 
 public class ProjectTabActionGroup extends IdeDependentActionGroup {
 
-    private ProjectTabAction latest;
-
     @Override
     public boolean isDumbAware() {
         return true;
@@ -22,7 +20,7 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
             return;
         }
 
-        ProjectTabAction projectTabAction = new ProjectTabAction(project.getName(), projectLocation, latest);
+        ProjectTabAction projectTabAction = new ProjectTabAction(project.getName(), projectLocation);
         List<ProjectTabAction> duplicateProjectNames = findDuplicateProjectNames(project.getName());
         if (!duplicateProjectNames.isEmpty()) {
             for (ProjectTabAction action : duplicateProjectNames) {
@@ -31,7 +29,6 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
             setDuplicateProjectName(projectTabAction);
         }
         add(projectTabAction);
-        latest = projectTabAction;
     }
 
     public void removeProject(Project project) {
@@ -39,21 +36,12 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
         if (projectTabAction == null) {
             return;
         }
-        if (latest == projectTabAction) {
-            ProjectTabAction previousTab = projectTabAction.getPreviousTab();
-            if (previousTab == projectTabAction) {
-                latest = null;
-            } else {
-                latest = previousTab;
-            }
-        }
 
         remove(projectTabAction);
         List<ProjectTabAction> duplicateProjectNames = findDuplicateProjectNames(project.getName());
         if (duplicateProjectNames.size() == 1) {
             setDuplicateProjectName(duplicateProjectNames.get(0));
         }
-        projectTabAction.dispose();
     }
 
     private void setDuplicateProjectName(ProjectTabAction projectTabAction) {
