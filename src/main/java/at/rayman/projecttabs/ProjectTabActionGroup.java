@@ -1,10 +1,15 @@
 package at.rayman.projecttabs;
 
+import at.rayman.projecttabs.settings.SettingsState;
 import com.intellij.ide.IdeDependentActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ProjectTabActionGroup extends IdeDependentActionGroup {
@@ -38,9 +43,15 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
         }
 
         remove(projectTabAction);
+
+        if (SettingsState.getInstance().focusLastProject) {
+            AnAction[] tabs = super.getChildren(null);
+            ((ProjectTabAction) tabs[tabs.length - 1]).bringProjectWindowToFront();
+        }
+
         List<ProjectTabAction> duplicateProjectNames = findDuplicateProjectNames(project.getName());
         if (duplicateProjectNames.size() == 1) {
-            setDuplicateProjectName(duplicateProjectNames.get(0));
+            duplicateProjectNames.get(0).setDisplayName(duplicateProjectNames.get(0).getProjectName());
         }
     }
 
@@ -54,7 +65,7 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
 
         for (AnAction action : getChildren(null)) {
             if (action instanceof ProjectTabAction projectTabAction
-                    && projectName.equals(projectTabAction.getProjectName())) {
+                && projectName.equals(projectTabAction.getProjectName())) {
                 duplicateProjectNames.add(projectTabAction);
             }
         }
@@ -65,11 +76,18 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
     private ProjectTabAction findProjectTabAction(String projectLocation) {
         for (AnAction action : getChildren(null)) {
             if (action instanceof ProjectTabAction projectTabAction
-                    && (projectLocation.equals(projectTabAction.getProjectLocation()))) {
+                && (projectLocation.equals(projectTabAction.getProjectLocation()))) {
                 return projectTabAction;
             }
         }
         return null;
+    }
+
+    @Override
+    public AnAction @NotNull [] getChildren(@Nullable AnActionEvent event) {
+        AnAction[] children = super.getChildren(event);
+        Arrays.sort(children, SettingsState.getInstance().tabOrder.getComparator());
+        return children;
     }
 
 }

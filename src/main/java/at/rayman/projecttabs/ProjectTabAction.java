@@ -2,6 +2,7 @@ package at.rayman.projecttabs;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ToggleAction;
@@ -74,6 +75,10 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
 
     @Override
     public void setSelected(@NotNull AnActionEvent e, boolean selected) {
+        bringProjectWindowToFront();
+    }
+
+    public void bringProjectWindowToFront() {
         Project project = findProject();
         if (project == null) {
             return;
@@ -178,6 +183,11 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
         tab.addMouseListener(tabMouseAdapter);
         label.addMouseListener(tabMouseAdapter);
         return tab;
+    }
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
 }

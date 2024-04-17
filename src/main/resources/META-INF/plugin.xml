@@ -23,6 +23,15 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <postStartupActivity implementation="at.rayman.projecttabs.ProjectTabManager$StartupActivity"/>
+
+        <applicationService serviceImplementation="at.rayman.projecttabs.settings.SettingsState" />
+
+        <applicationConfigurable
+            parentId="tools"
+            instance="at.rayman.projecttabs.settings.SettingsConfigurable"
+            id="at.rayman.projecttabs.settings.SettingsConfigurable"
+            displayName="Project Tabs"
+        />
     </extensions>
 
     <applicationListeners>
@@ -31,7 +40,6 @@
 
     <actions>
         <group id="ProjectTabs" class="at.rayman.projecttabs.ProjectTabActionGroup" text="ProjectTabs">
-            <separator/>
         </group>
     </actions>
 
