@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class ProjectTabActionGroup extends IdeDependentActionGroup {
 
@@ -45,8 +46,10 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
         remove(projectTabAction);
 
         if (SettingsState.getInstance().focusLastProject) {
-            AnAction[] tabs = super.getChildren(null);
-            ((ProjectTabAction) tabs[tabs.length - 1]).bringProjectWindowToFront();
+            Optional<Project> previousProject = SettingsState.getInstance().getLastFocusedProject();
+            previousProject
+                .map(p -> findProjectTabAction(p.getPresentableUrl()))
+                .ifPresent(ProjectTabAction::bringProjectWindowToFront);
         }
 
         List<ProjectTabAction> duplicateProjectNames = findDuplicateProjectNames(project.getName());
