@@ -14,6 +14,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.SpinningProgressIcon;
 import com.intellij.util.BitUtil;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,8 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
 
     private static final Icon ICON_CLOSE_HIDDEN = IconLoader.getIcon("closeHidden.svg", ProjectTabAction.class.getClassLoader());
 
+    private static final Icon ICON_PROGRESS = new SpinningProgressIcon();
+
     private static final Border BORDER_SELECTED = JBUI.Borders.customLine(UIManager.getColor("TabbedPane.underlineColor"), 0, 0, 3, 0);
 
     private static final Border BORDER_EMPTY = JBUI.Borders.empty();
@@ -40,11 +43,22 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
 
     private boolean isHovered = false;
 
+    private boolean isClosing = false;
+
+    private JPanel tab;
+
+    private JLabel icon;
+
     public ProjectTabAction(String projectName, String projectLocation) {
         super();
         this.projectName = projectName;
         this.displayName = projectName;
         this.projectLocation = projectLocation;
+    }
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
     @Override
@@ -66,6 +80,8 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
             label.setText(displayName);
             if (!isHovered) {
                 label.setForeground(isCurrentTab ? JBColor.BLACK : JBColor.DARK_GRAY);
+            }
+            if (!isHovered || !isClosing) {
                 JLabel icon = (JLabel) tab.getComponent(1);
                 icon.setIcon(isCurrentTab ? AllIcons.Actions.Close : ICON_CLOSE_HIDDEN);
             }
@@ -123,9 +139,10 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
     }
 
     private JPanel buildTab(Presentation presentation, String place) {
-        JPanel tab = new JPanel();
+        tab = new JPanel();
+        tab.setName(projectName);
         JLabel label = new JLabel(displayName);
-        JLabel icon = new JLabel(AllIcons.Actions.Close);
+        icon = new JLabel(AllIcons.Actions.Close);
         tab.add(label);
         tab.add(icon);
         tab.setBorder(BORDER_SELECTED);
@@ -134,21 +151,25 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1 || e.getButton() == MouseEvent.BUTTON2) {
-                    ProjectManager.getInstance().closeAndDispose(findProject());
+                    closeTab();
                 }
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
                 isHovered = true;
-                icon.setIcon(AllIcons.Actions.CloseHovered);
-                label.setForeground(JBColor.BLACK);
+                if (!isClosing) {
+                    icon.setIcon(AllIcons.Actions.CloseHovered);
+                    label.setForeground(JBColor.BLACK);
+                }
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 isHovered = false;
-                icon.setIcon(AllIcons.Actions.Close);
+                if (!isClosing) {
+                    icon.setIcon(AllIcons.Actions.Close);
+                }
             }
         });
         MouseAdapter tabMouseAdapter = new MouseAdapter() {
@@ -160,6 +181,9 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
                 if (e.getButton() == MouseEvent.BUTTON2) {
                     ProjectManager.getInstance().closeAndDispose(findProject());
                 }
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    new ProjectTabContextMenu().show(ProjectTabAction.this, label, e.getX(), e.getY());
+                }
             }
 
             @Override
@@ -167,7 +191,9 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
                 if (tab.getBorder().equals(BORDER_EMPTY)) {
                     isHovered = true;
                     label.setForeground(JBColor.BLACK);
-                    icon.setIcon(AllIcons.Actions.Close);
+                    if (!isClosing) {
+                        icon.setIcon(AllIcons.Actions.Close);
+                    }
                 }
             }
 
@@ -176,7 +202,9 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
                 if (tab.getBorder().equals(BORDER_EMPTY)) {
                     isHovered = false;
                     label.setForeground(JBColor.DARK_GRAY);
-                    icon.setIcon(ICON_CLOSE_HIDDEN);
+                    if (!isClosing) {
+                        icon.setIcon(ICON_CLOSE_HIDDEN);
+                    }
                 }
             }
         };
@@ -185,9 +213,10 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
         return tab;
     }
 
-    @Override
-    public @NotNull ActionUpdateThread getActionUpdateThread() {
-        return ActionUpdateThread.BGT;
+    public void closeTab() {
+        isClosing = true;
+        icon.setIcon(ICON_PROGRESS);
+        ProjectManager.getInstance().closeAndDispose(findProject());
     }
 
 }
