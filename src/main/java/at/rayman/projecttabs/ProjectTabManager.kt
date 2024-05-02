@@ -10,20 +10,20 @@ import com.intellij.openapi.wm.WindowManager
 class ProjectTabManager : ProjectCloseListener {
 
     companion object {
-        val projectTabGroup: ProjectTabActionGroup
-            get() = ActionManager.getInstance().getAction("ProjectTabs") as ProjectTabActionGroup
+        val projectTabAction: ProjectTabAction
+            get() = ActionManager.getInstance().getAction("ProjectTabs") as ProjectTabAction
     }
 
     private class StartupActivity : ProjectActivity {
         override suspend fun execute(project: Project) {
-            projectTabGroup.addProject(project)
+     //       projectTabAction.addTab(project)
             val frame = WindowManager.getInstance().getFrame(project)
             frame?.addWindowFocusListener(ProjectFocusListener())
         }
     }
 
     override fun projectClosed(project: Project) {
-        projectTabGroup.removeProject(project)
+  //      projectTabAction.removeTab(project)
         SettingsState.getInstance().removeProject(project)
     }
 

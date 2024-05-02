@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 public enum TabOrder {
 
-    ALPHABETICAL(Comparator.comparing(tab -> ((ProjectTabAction) tab).getProjectName())),
+    ALPHABETICAL(Comparator.comparing(tab -> tab.toString())),
     CHRONOLOGICAL((tab1, tab2) -> 0);
 
     private final Comparator<AnAction> comparator;

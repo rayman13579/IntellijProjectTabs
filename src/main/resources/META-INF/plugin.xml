@@ -48,8 +48,8 @@
     </applicationListeners>
 
     <actions>
-        <group id="ProjectTabs" class="at.rayman.projecttabs.ProjectTabActionGroup" text="ProjectTabs">
-        </group>
+        <action id="ProjectTabs" class="at.rayman.projecttabs.ProjectTabAction" text="ProjectTabs">
+        </action>
     </actions>
 
 </idea-plugin>
