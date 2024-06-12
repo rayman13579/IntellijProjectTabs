@@ -25,6 +25,7 @@ public class SettingsConfigurable implements Configurable {
     public boolean isModified() {
         SettingsState settings = SettingsState.getInstance();
         return component.isFocusLastProject() != settings.focusLastProject
+            || component.isMoveProjectToScreen() != settings.moveProjectToScreen
             || component.getTabOrder() != settings.tabOrder;
     }
 
@@ -32,6 +33,7 @@ public class SettingsConfigurable implements Configurable {
     public void apply() {
         SettingsState settings = SettingsState.getInstance();
         settings.focusLastProject = component.isFocusLastProject();
+        settings.moveProjectToScreen = component.isMoveProjectToScreen();
         settings.tabOrder = component.getTabOrder();
     }
 
@@ -39,6 +41,7 @@ public class SettingsConfigurable implements Configurable {
     public void reset() {
         SettingsState settings = SettingsState.getInstance();
         component.setFocusLastProject(settings.focusLastProject);
+        component.setMoveProjectToScreen(settings.moveProjectToScreen);
         component.setTabOrder(settings.tabOrder);
     }
 

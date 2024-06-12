@@ -16,11 +16,8 @@
     <description>Easily see and navigate between your open projects directly from the toolbar.</description>
     <change-notes><![CDATA[
         <ul>
-          <li>Added settings panel under "Tools->Project Tabs" for</li>
-          <ul>
-            <li>Project closing behaviour</li>
-            <li>Tab ordering</li>
-          </ul>
+          <li>Added setting to move project window to current screen and maximize it when selecting</li>
+          <li>Fix loading spinner when closing tabs</li>
         </ul>
     ]]></change-notes>
 

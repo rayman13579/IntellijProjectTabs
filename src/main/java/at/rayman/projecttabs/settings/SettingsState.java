@@ -22,6 +22,8 @@ public class SettingsState implements PersistentStateComponent<SettingsState> {
 
     public boolean focusLastProject = false;
 
+    public boolean moveProjectToScreen = true;
+
     public TabOrder tabOrder = TabOrder.CHRONOLOGICAL;
 
     @Transient

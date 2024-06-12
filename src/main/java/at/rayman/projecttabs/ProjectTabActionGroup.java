@@ -2,6 +2,7 @@ package at.rayman.projecttabs;
 
 import at.rayman.projecttabs.settings.SettingsState;
 import com.intellij.ide.IdeDependentActionGroup;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
@@ -76,7 +77,7 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
         return duplicateProjectNames;
     }
 
-    private ProjectTabAction findProjectTabAction(String projectLocation) {
+    public ProjectTabAction findProjectTabAction(String projectLocation) {
         for (AnAction action : getChildren(null)) {
             if (action instanceof ProjectTabAction projectTabAction
                 && (projectLocation.equals(projectTabAction.getProjectLocation()))) {
@@ -88,7 +89,7 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
 
     @Override
     public AnAction @NotNull [] getChildren(@Nullable AnActionEvent event) {
-        AnAction[] children = super.getChildren(event);
+        AnAction[] children = super.getChildren(null, ActionManager.getInstance());
         Arrays.sort(children, SettingsState.getInstance().tabOrder.getComparator());
         return children;
     }
