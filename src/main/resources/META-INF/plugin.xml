@@ -22,17 +22,15 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <postStartupActivity implementation="at.rayman.projecttabs.ProjectTabManager$StartupActivity"/>
+        <postStartupActivity implementation="at.rayman.projecttabs.ProjectManager$StartupActivity"/>
     </extensions>
 
     <applicationListeners>
-        <listener class="at.rayman.projecttabs.ProjectTabManager" topic="com.intellij.openapi.project.ProjectCloseListener"/>
+        <listener class="at.rayman.projecttabs.ProjectManager" topic="com.intellij.openapi.project.ProjectCloseListener"/>
     </applicationListeners>
 
     <actions>
-        <group id="ProjectTabs" class="at.rayman.projecttabs.ProjectTabActionGroup" text="ProjectTabs">
-            <separator/>
-        </group>
+        <action id="ProjectTabs" class="at.rayman.projecttabs.ProjectTabAction" text="ProjectTabs"/>
     </actions>
 
 </idea-plugin>
