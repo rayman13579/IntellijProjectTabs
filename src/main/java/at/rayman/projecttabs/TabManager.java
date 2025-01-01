@@ -1,5 +1,6 @@
 package at.rayman.projecttabs;
 
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.TabInfo;
@@ -33,13 +34,16 @@ public class TabManager {
         return tabsList.containsKey(project) && tabsList.get(project) == null;
     }
 
-    public void addProjectTabs(Project project, JBTabs tabs) {
-        tabsList.put(project, tabs);
+    public void addProjectTabs(Project project, JBTabs projectTabs) {
+        tabsList.put(project, projectTabs);
         this.tabs.add(new TabInfo(new JPanel()).setText(project.getName()));
-        for (JBTabs tab : tabsList.values()) {
-            if (tab != null) {
-                tab.removeAllTabs();
-                this.tabs.forEach(tab::addTab);
+        for (JBTabs tabs : tabsList.values()) {
+            if (tabs != null) {
+                tabs.removeAllTabs();
+                this.tabs.forEach(tabs::addTab);
+
+                ProjectTabAction action = (ProjectTabAction) ActionManager.getInstance().getAction("ProjectTabs");
+                action.adjustTabsWidth(tabs.getComponent().getParent());
             }
         }
     }
@@ -54,6 +58,8 @@ public class TabManager {
                     break;
                 }
             }
+            ProjectTabAction action = (ProjectTabAction) ActionManager.getInstance().getAction("ProjectTabs");
+            action.adjustTabsWidth(tab.getComponent().getParent());
         }
     }
 
