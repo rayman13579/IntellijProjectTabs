@@ -29,7 +29,7 @@ public class ProjectTabListener implements TabsListener {
 
     private Project findProject(TabInfo tabInfo) {
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-            if (tabInfo.getText().equals(project.getName())) {
+            if (tabInfo.getText().equals(project.getName()) || project.getPresentableUrl().endsWith(tabInfo.getText())) {
                 return project;
             }
         }

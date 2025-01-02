@@ -31,13 +31,22 @@ public class TabManager {
     }
 
     public void addProjectTabs(Project project, ProjectTabs projectTabs) {
+        List<Project> duplicateProjects = getDuplicateProjectNames(project);
+        if (!duplicateProjects.isEmpty()) {
+            for (Project duplicateProject : duplicateProjects) {
+                referenceTabs.stream()
+                    .filter(tab -> tab.getText().equals(duplicateProject.getName()))
+                    .forEach(tab -> tab.setText(getDuplicateName(duplicateProject)));
+            }
+        }
         projectTabsMap.put(project, projectTabs);
-        TabInfo newTab = new TabInfo(new JPanel()).setText(project.getName());
+        String tabName = duplicateProjects.isEmpty() ? project.getName() : getDuplicateName(project);
+        TabInfo newTab = new TabInfo(new JPanel()).setText(tabName);
         referenceTabs.add(newTab);
         for (Map.Entry<Project, ProjectTabs> tabsEntry : projectTabsMap.entrySet()) {
             if (tabsEntry.getValue() != null) {
                 if (tabsEntry.getKey().equals(project)) {
-                    referenceTabs.forEach(tab -> tabsEntry.getValue().addTab(tab));
+                    referenceTabs.forEach(tabsEntry.getValue()::addTab);
                 } else {
                     tabsEntry.getValue().addTab(newTab);
                 }
@@ -50,10 +59,21 @@ public class TabManager {
 
     public void removeProjectTabs(Project project) {
         projectTabsMap.remove(project);
-        referenceTabs.removeIf(tab -> tab.getText().equals(project.getName()));
+        List<Project> duplicateProjects = getDuplicateProjectNames(project);
+        if (!duplicateProjects.isEmpty()) {
+            referenceTabs.removeIf(tab -> tab.getText().equals(getDuplicateName(project)));
+            for (Project duplicateProject : duplicateProjects) {
+                referenceTabs.stream()
+                    .filter(tab -> tab.getText().equals(getDuplicateName(duplicateProject)))
+                    .forEach(tab -> tab.setText(duplicateProject.getName()));
+            }
+        } else {
+            referenceTabs.removeIf(tab -> tab.getText().equals(project.getName()));
+        }
         for (ProjectTabs tab : projectTabsMap.values()) {
             for (TabInfo tabInfo : tab.getTabs()) {
-                if (tabInfo.getText().equals(project.getName())) {
+                String tabName = duplicateProjects.isEmpty() ? project.getName() : getDuplicateName(project);
+                if (tabInfo.getText().equals(tabName)) {
                     tab.removeTab(tabInfo);
                     break;
                 }
@@ -65,8 +85,13 @@ public class TabManager {
 
     public void selectTab(Project project, String tabName) {
         ProjectTabs tabs = projectTabsMap.get(project);
+        if (tabs == null) {
+            return;
+        }
+        List<Project> duplicateProjects = getDuplicateProjectNames(project);
         for (TabInfo tabInfo : tabs.getTabs()) {
-            if (tabInfo.getText().equals(tabName)) {
+            String duplicateTabName = duplicateProjects.isEmpty() ? project.getName() : getDuplicateName(project);
+            if (tabInfo.getText().equals(duplicateTabName)) {
                 tabs.select(tabInfo, false);
                 break;
             }
@@ -85,4 +110,17 @@ public class TabManager {
             tabs.reorderTabs(referenceTabs);
         }
     }
+
+    private List<Project> getDuplicateProjectNames(Project newProject) {
+        return projectTabsMap.keySet().stream()
+            .filter(project -> project.getName().equals(newProject.getName()) && !project.equals(newProject)
+                && projectTabsMap.get(project) != null)
+            .toList();
+    }
+
+    private String getDuplicateName(Project project) {
+        int index = project.getPresentableUrl().lastIndexOf('/', project.getPresentableUrl().lastIndexOf('/') - 1);
+        return project.getPresentableUrl().substring(index + 1);
+    }
+
 }
