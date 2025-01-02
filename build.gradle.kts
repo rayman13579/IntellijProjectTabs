@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "at.rayman"
-version = "1.1"
+version = "2.0-beta"
 
 repositories {
     mavenCentral()
@@ -32,7 +32,6 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("232")
-        untilBuild.set("242.*")
     }
 
     signPlugin {
@@ -43,5 +42,6 @@ tasks {
 
     publishPlugin {
         token.set(System.getenv("PUBLISH_TOKEN"))
+        channels.set(listOf("beta"))
     }
 }

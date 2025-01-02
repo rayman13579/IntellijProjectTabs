@@ -14,6 +14,18 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description>Easily see and navigate between your open projects directly from the toolbar.</description>
+    <change-notes><![CDATA[
+        <ul>
+          <li>Rewrote plugin to use actual Tabs and not panels looking like tabs</li>
+          <li>Most features from version 1.x are missing</li>
+        </ul>
+        Known Issues:
+        <ul>
+          <li>When dragging a not selected tab no drag&drop animation is shown, but it still works</li>
+          <li>Underline color of active tab is sometimes wrong</li>
+          <li>Selected tab of non focused project could be displayed wrong</li>
+        </ul>
+    ]]></change-notes>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->

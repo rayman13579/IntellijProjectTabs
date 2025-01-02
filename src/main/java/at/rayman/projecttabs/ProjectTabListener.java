@@ -1,6 +1,5 @@
 package at.rayman.projecttabs;
 
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.WindowManager;
@@ -17,8 +16,12 @@ import java.util.Optional;
 public class ProjectTabListener implements TabsListener {
 
     @Override
+    public void tabsMoved() {
+        TabManager.getInstance().reorderTabs();
+    }
+
+    @Override
     public void selectionChanged(@Nullable TabInfo oldSelection, @Nullable TabInfo newSelection) {
-        PropertiesComponent.getInstance().setValue("currentTab", newSelection.getText());
         Project project = findProject(newSelection);
         bringProjectToFront(project);
         TabManager.getInstance().selectTab(project, newSelection.getText());

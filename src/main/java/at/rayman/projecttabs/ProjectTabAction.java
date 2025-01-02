@@ -10,10 +10,6 @@ import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.openapi.wm.impl.headertoolbar.MainToolbar;
-import com.intellij.ui.tabs.JBTabs;
-import com.intellij.ui.tabs.JBTabsFactory;
-import com.intellij.ui.tabs.impl.JBTabsImpl;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -34,7 +30,7 @@ public class ProjectTabAction extends DumbAwareAction implements CustomComponent
     @Override
     public @NotNull JComponent createCustomComponent(@NotNull Presentation presentation, @NotNull String place) {
         Project tmpProject = ProjectManager.getInstance().getDefaultProject();
-        JBTabs tabs = JBTabsFactory.createTabs(tmpProject);
+        ProjectTabs tabs = new ProjectTabs(tmpProject);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(tabs.getComponent(), BorderLayout.CENTER);
         return panel;
@@ -44,7 +40,7 @@ public class ProjectTabAction extends DumbAwareAction implements CustomComponent
     public void updateCustomComponent(@NotNull JComponent component, @NotNull Presentation presentation) {
         Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(component));
         if (project != null && TabManager.getInstance().hasPlaceholderProject(project)) {
-            JBTabsImpl tabs = (JBTabsImpl) component.getComponent(0);
+            ProjectTabs tabs = (ProjectTabs) component.getComponent(0);
             tabs.getPresentation().setTabDraggingEnabled(true);
             tabs.addListener(new ProjectTabListener());
             TabManager.getInstance().addProjectTabs(project, tabs);
@@ -76,8 +72,8 @@ public class ProjectTabAction extends DumbAwareAction implements CustomComponent
 
     public void adjustTabsWidth(Container component) {
         if (component != null && component.getParent() != null) {
-            JBTabsImpl tabs = (JBTabsImpl) component.getComponent(0);
-            MainToolbar mainToolbar = getMainToolbar(component);
+            ProjectTabs tabs = (ProjectTabs) component.getComponent(0);
+            Container mainToolbar = getMainToolbar(component);
             Component[] components = mainToolbar.getComponents();
             Optional<Integer> usedToolbarWidth = Arrays.stream(components)
                 .map(c -> (ActionToolbarImpl) c)
@@ -102,11 +98,11 @@ public class ProjectTabAction extends DumbAwareAction implements CustomComponent
         }
     }
 
-    private MainToolbar getMainToolbar(Container component) {
+    private Container getMainToolbar(Container component) {
         Container parent = component.getParent();
         while (parent != null) {
-            if (parent instanceof MainToolbar) {
-                return (MainToolbar) parent;
+            if (parent.getClass().getName().contains("MainToolbar")) {
+                return parent;
             }
             parent = parent.getParent();
         }
