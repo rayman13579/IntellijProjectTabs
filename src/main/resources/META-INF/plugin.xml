@@ -17,8 +17,11 @@
     <change-notes><![CDATA[
         <ul>
           <li>Rewrote plugin to use actual Tabs and not panels looking like tabs</li>
+          <li>Tabs can be drag&dropped to change order</li>
+          <li>Tabs will scroll if available width is too low</li>
           <li>Most features from version 1.x are missing</li>
         </ul>
+
         Known Issues:
         <ul>
           <li>When dragging a not selected tab no drag&drop animation is shown, but it still works</li>

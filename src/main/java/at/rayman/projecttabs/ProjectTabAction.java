@@ -5,7 +5,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
-import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -44,7 +43,7 @@ public class ProjectTabAction extends DumbAwareAction implements CustomComponent
             tabs.getPresentation().setTabDraggingEnabled(true);
             tabs.addListener(new ProjectTabListener());
             TabManager.getInstance().addProjectTabs(project, tabs);
-            TabManager.getInstance().selectTab(project, project.getName());
+            TabManager.getInstance().selectTab(project);
 
             WindowManager.getInstance().getFrame(project).addComponentListener(new ComponentListener() {
                 @Override
@@ -72,19 +71,19 @@ public class ProjectTabAction extends DumbAwareAction implements CustomComponent
 
     public void adjustTabsWidth(Container component) {
         if (component != null && component.getParent() != null) {
-            ProjectTabs tabs = (ProjectTabs) component.getComponent(0);
+            ProjectTabs projectTabs = (ProjectTabs) component.getComponent(0);
             Container mainToolbar = getMainToolbar(component);
             Component[] components = mainToolbar.getComponents();
             Optional<Integer> usedToolbarWidth = Arrays.stream(components)
-                .map(c -> (ActionToolbarImpl) c)
+                .map(c -> (JPanel) c)
                 .flatMap(toolbar -> Arrays.stream(toolbar.getComponents()))
                 .filter(c -> !c.equals(component))
                 .map(Component::getWidth)
                 .reduce(Integer::sum);
             if (usedToolbarWidth.isPresent()) {
                 int availableWidth = mainToolbar.getWidth() - usedToolbarWidth.get();
-                Optional<Integer> neededWidth = tabs.getTabs().stream()
-                    .map(t -> tabs.getInfoToLabel().get(t).getPreferredSize().getWidth())
+                Optional<Integer> neededWidth = projectTabs.getTabs().stream()
+                    .map(t -> projectTabs.getTabLabel(t).getPreferredSize().getWidth())
                     .reduce(Double::sum)
                     .map(Double::intValue);
                 if (neededWidth.isPresent()) {

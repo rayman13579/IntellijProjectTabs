@@ -83,7 +83,7 @@ public class TabManager {
         }
     }
 
-    public void selectTab(Project project, String tabName) {
+    public void selectTab(Project project) {
         ProjectTabs tabs = projectTabsMap.get(project);
         if (tabs == null) {
             return;

@@ -24,7 +24,7 @@ public class ProjectTabListener implements TabsListener {
     public void selectionChanged(@Nullable TabInfo oldSelection, @Nullable TabInfo newSelection) {
         Project project = findProject(newSelection);
         bringProjectToFront(project);
-        TabManager.getInstance().selectTab(project, newSelection.getText());
+        TabManager.getInstance().selectTab(project);
     }
 
     private Project findProject(TabInfo tabInfo) {
