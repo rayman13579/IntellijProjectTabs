@@ -1,10 +1,10 @@
 package at.rayman.projecttabs;
 
+import at.rayman.projecttabs.yoinked.tabs.TabInfo;
+import at.rayman.projecttabs.yoinked.tabs.TabsListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.ui.tabs.TabInfo;
-import com.intellij.ui.tabs.TabsListener;
 import com.intellij.util.BitUtil;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,8 +1,8 @@
 package at.rayman.projecttabs;
 
+import at.rayman.projecttabs.yoinked.tabs.TabInfo;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.tabs.TabInfo;
 
 import javax.swing.*;
 import java.util.*;
@@ -41,7 +41,7 @@ public class TabManager {
         }
         projectTabsMap.put(project, projectTabs);
         String tabName = duplicateProjects.isEmpty() ? project.getName() : getDuplicateName(project);
-        TabInfo newTab = new TabInfo(new JPanel()).setText(tabName);
+        TabInfo newTab = new TabInfo(new JLabel()).setText(tabName);
         referenceTabs.add(newTab);
         for (Map.Entry<Project, ProjectTabs> tabsEntry : projectTabsMap.entrySet()) {
             if (tabsEntry.getValue() != null) {
