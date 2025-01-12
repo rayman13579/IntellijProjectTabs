@@ -51,6 +51,8 @@ public class ProjectTabListener implements TabsListener {
             if (!projectFrame.getBounds().contains(MouseInfo.getPointerInfo().getLocation())) {
                 projectFrame.setLocation(bounds.x, bounds.y);
                 projectFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
+            } else if (projectFrame.getExtendedState() != Frame.MAXIMIZED_BOTH) {
+                projectFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
             }
         } else {
             int frameState = projectFrame.getExtendedState();
