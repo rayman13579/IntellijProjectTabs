@@ -3,12 +3,9 @@ package at.rayman.projecttabs;
 import at.rayman.projecttabs.settings.SettingsState;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.ActionUpdateThread;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
-import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -114,7 +111,7 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
             }
         }
         projectFrame.toFront();
-        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
+        SwingUtilities.invokeLater(() -> {
             Component mostRecentFocusOwner = projectFrame.getMostRecentFocusOwner();
             if (mostRecentFocusOwner != null) {
                 IdeFocusManager.getGlobalInstance().requestFocus(mostRecentFocusOwner, true);
@@ -153,7 +150,7 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1 || e.getButton() == MouseEvent.BUTTON2) {
-                    closeTab(AnActionEvent.createFromDataContext(place, presentation, DataManager.getInstance().getDataContext(tab)));
+                    closeTab(AnActionEvent.createEvent(DataManager.getInstance().getDataContext(tab), presentation, place, ActionUiKind.NONE, e));
                 }
             }
 
@@ -179,13 +176,13 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    actionPerformed(AnActionEvent.createFromDataContext(place, presentation, DataManager.getInstance().getDataContext(tab)));
+                    ActionUtil.performActionDumbAwareWithCallbacks(ProjectTabAction.this, AnActionEvent.createEvent(DataManager.getInstance().getDataContext(tab), presentation, place, ActionUiKind.NONE, e));
                 }
                 if (e.getButton() == MouseEvent.BUTTON2) {
-                    closeTab(AnActionEvent.createFromDataContext(place, presentation, DataManager.getInstance().getDataContext(tab)));
+                    closeTab(AnActionEvent.createEvent(DataManager.getInstance().getDataContext(tab), presentation, place, ActionUiKind.NONE, e));
                 }
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    new ProjectTabContextMenu().show(ProjectTabAction.this, label, e.getX(), e.getY(), AnActionEvent.createFromDataContext(place, presentation, DataManager.getInstance().getDataContext(tab)));
+                    new ProjectTabContextMenu().show(ProjectTabAction.this, label, e.getX(), e.getY(), AnActionEvent.createEvent(DataManager.getInstance().getDataContext(tab), presentation, place, ActionUiKind.NONE, e));
                 }
             }
 

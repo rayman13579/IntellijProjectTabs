@@ -67,7 +67,7 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
     private List<ProjectTabAction> findDuplicateProjectNames(String projectName) {
         List<ProjectTabAction> duplicateProjectNames = new ArrayList<>();
 
-        for (AnAction action : getChildren(null)) {
+        for (AnAction action : getChildren(ActionManager.getInstance())) {
             if (action instanceof ProjectTabAction projectTabAction
                 && projectName.equals(projectTabAction.getProjectName())) {
                 duplicateProjectNames.add(projectTabAction);
@@ -78,7 +78,7 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
     }
 
     public ProjectTabAction findProjectTabAction(String projectLocation) {
-        for (AnAction action : getChildren(null)) {
+        for (AnAction action : getChildren(ActionManager.getInstance())) {
             if (action instanceof ProjectTabAction projectTabAction
                 && (projectLocation.equals(projectTabAction.getProjectLocation()))) {
                 return projectTabAction;
@@ -89,7 +89,7 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
 
     @Override
     public AnAction @NotNull [] getChildren(@Nullable AnActionEvent event) {
-        AnAction[] children = super.getChildren(null, ActionManager.getInstance());
+        AnAction[] children = super.getChildren(ActionManager.getInstance());
         Arrays.sort(children, SettingsState.getInstance().tabOrder.getComparator());
         return children;
     }

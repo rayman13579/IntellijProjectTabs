@@ -16,8 +16,8 @@
     <description>Easily see and navigate between your open projects directly from the toolbar.</description>
     <change-notes><![CDATA[
         <ul>
-          <li>Added setting to move project window to current screen and maximize it when selecting</li>
-          <li>Fix loading spinner when closing tabs</li>
+          <li>Added support for new Intellij versions</li>
+          <li>Removed some context menu options because of compatibility issues</li>
         </ul>
     ]]></change-notes>
 

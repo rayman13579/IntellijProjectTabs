@@ -11,9 +11,9 @@ public class ProjectTabContextMenu {
 
     public void show(ProjectTabAction tab, JComponent component, int x, int y, AnActionEvent e) {
         DefaultActionGroup dropDown = new DefaultActionGroup();
-        dropDown.add(getAbstractAction("Close Project", () -> tab.closeTab(e)));
+    //    dropDown.add(getAbstractAction("Close Project", () -> tab.closeTab(e)));
         dropDown.add(getAbstractAction("Close Other Projects", () -> closeOtherTabs(tab, e)));
-        dropDown.add(getAbstractAction("Close All Projects", () -> closeAllTabs(e)));
+   //     dropDown.add(getAbstractAction("Close All Projects", () -> closeAllTabs(e)));
         dropDown.add(getAbstractAction("Close Projects to the Left", () -> closeTabsToTheLeft(tab, e)));
         dropDown.add(getAbstractAction("Close Projects to the Right", () -> closeTabsToTheRight(tab, e)));
 
@@ -55,7 +55,7 @@ public class ProjectTabContextMenu {
     }
 
     private List<ProjectTabAction> getTabs() {
-        return Arrays.stream(ProjectTabManager.Companion.getProjectTabGroup().getChildren(null))
+        return Arrays.stream(ProjectTabManager.Companion.getProjectTabGroup().getChildren(ActionManager.getInstance()))
             .map(action -> (ProjectTabAction) action)
             .toList();
     }
