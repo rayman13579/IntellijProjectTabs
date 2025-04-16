@@ -49,6 +49,7 @@ import at.rayman.projecttabs.yoinked.tabs.impl.singleRow.ScrollableSingleRowLayo
 import at.rayman.projecttabs.yoinked.tabs.impl.singleRow.SingleRowLayout
 import at.rayman.projecttabs.yoinked.tabs.impl.singleRow.SingleRowPassInfo
 import at.rayman.projecttabs.yoinked.tabs.impl.themes.TabTheme
+import com.intellij.openapi.actionSystem.toolbarLayout.ToolbarLayoutStrategy
 import com.intellij.util.Alarm
 import com.intellij.util.Function
 import com.intellij.util.concurrency.annotations.RequiresEdt
@@ -208,7 +209,7 @@ open class JBTabsImpl(private var project: Project?,
         repaintAttractions()
       }
     }
-    Disposer.register(parentDisposable, result)
+
     result
   }
 
@@ -3127,7 +3128,8 @@ private fun createToolbar(group: ActionGroup, targetComponent: JComponent, actio
   toolbar.targetComponent = targetComponent
   toolbar.component.border = JBUI.Borders.empty()
   toolbar.component.isOpaque = false
-  toolbar.layoutPolicy = ActionToolbar.NOWRAP_LAYOUT_POLICY
+  toolbar
+  toolbar.layoutStrategy = ToolbarLayoutStrategy.NOWRAP_STRATEGY
   return toolbar
 }
 
