@@ -73,11 +73,11 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
         JPanel tab = (JPanel) e.getPresentation().getClientProperty(COMPONENT_KEY);
         if (tab != null) {
             tab.setBorder(isCurrentTab ? BORDER_SELECTED : BORDER_EMPTY);
-            JLabel label = (JLabel) tab.getComponent(0);
+            JLabel label = (JLabel) tab.getComponent(1);
             label.setText(displayName);
             if (!isHovered) {
                 label.setForeground(isCurrentTab ? JBColor.BLACK : JBColor.DARK_GRAY);
-                JLabel icon = (JLabel) tab.getComponent(1);
+                JLabel icon = (JLabel) tab.getComponent(2);
                 icon.setIcon(isCurrentTab ? AllIcons.Actions.Close : ICON_CLOSE_HIDDEN);
             }
         }
@@ -140,8 +140,59 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
     private JPanel buildTab(Presentation presentation, String place) {
         JPanel tab = new JPanel();
         tab.setName(projectName);
+
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 0, 0));
+        buttonPanel.setPreferredSize(new Dimension(10, 15));
+        JLabel upButton = new JLabel(ICON_CLOSE_HIDDEN);
+        upButton.setPreferredSize(new Dimension(10, 10));
+        JLabel downButton = new JLabel(ICON_CLOSE_HIDDEN);
+        downButton.setPreferredSize(new Dimension(10, 10));
+        buttonPanel.add(upButton);
+        buttonPanel.add(downButton);
+
+        upButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                SettingsState.getInstance().tabOrder = TabOrder.MANUAL;
+                TabOrder.moveTabLeft(projectLocation);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                upButton.setIcon(IconLoader.getDarkIcon(AllIcons.General.ChevronUp, true));
+                downButton.setIcon(IconLoader.getDarkIcon(AllIcons.General.ChevronDown, false));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                upButton.setIcon(ICON_CLOSE_HIDDEN);
+                downButton.setIcon(ICON_CLOSE_HIDDEN);
+            }
+        });
+        downButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                SettingsState.getInstance().tabOrder = TabOrder.MANUAL;
+                TabOrder.moveTabRight(projectLocation);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                downButton.setIcon(IconLoader.getDarkIcon(AllIcons.General.ChevronDown, true));
+                upButton.setIcon(IconLoader.getDarkIcon(AllIcons.General.ChevronUp, false));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                downButton.setIcon(ICON_CLOSE_HIDDEN);
+                upButton.setIcon(ICON_CLOSE_HIDDEN);
+            }
+        });
+
         JLabel label = new JLabel(displayName);
         JLabel icon = new JLabel(AllIcons.Actions.Close);
+
+        tab.add(buttonPanel);
         tab.add(label);
         tab.add(icon);
         tab.setBorder(BORDER_SELECTED);
@@ -195,6 +246,8 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
                         icon.setIcon(AllIcons.Actions.Close);
                     }
                 }
+                upButton.setIcon(IconLoader.getDarkIcon(AllIcons.General.ChevronUp, false));
+                downButton.setIcon(IconLoader.getDarkIcon(AllIcons.General.ChevronDown, false));
             }
 
             @Override
@@ -206,6 +259,8 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
                         icon.setIcon(ICON_CLOSE_HIDDEN);
                     }
                 }
+                upButton.setIcon(ICON_CLOSE_HIDDEN);
+                downButton.setIcon(ICON_CLOSE_HIDDEN);
             }
         };
         tab.addMouseListener(tabMouseAdapter);

@@ -35,6 +35,9 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
             }
             setDuplicateProjectName(projectTabAction);
         }
+
+        TabOrder.registerTab(projectLocation);
+
         add(projectTabAction);
     }
 
