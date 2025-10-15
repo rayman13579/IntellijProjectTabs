@@ -16,8 +16,8 @@
     <description>Easily see and navigate between your open projects directly from the toolbar.</description>
     <change-notes><![CDATA[
         <ul>
-          <li>Added support for new Intellij versions</li>
-          <li>Removed some context menu options because of compatibility issues</li>
+          <li>Added buttons to reorder tabs</li>
+          <li>Added ordering options to context menu and settings</li>
         </ul>
     ]]></change-notes>
 

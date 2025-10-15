@@ -18,8 +18,8 @@ public class ProjectTabContextMenu {
         dropDown.add(getAbstractAction("Close Projects to the Left", () -> closeTabsToTheLeft(tab, e)));
         dropDown.add(getAbstractAction("Close Projects to the Right", () -> closeTabsToTheRight(tab, e)));
         dropDown.addSeparator();
-        dropDown.add(getAbstractAction("Sort alphabetically", () -> SettingsState.getInstance().tabOrder = TabOrder.ALPHABETICAL));
-        dropDown.add(getAbstractAction("Sort chronologically", () -> SettingsState.getInstance().tabOrder = TabOrder.CHRONOLOGICAL));
+        dropDown.add(getAbstractAction("Order alphabetically", () -> SettingsState.getInstance().tabOrder = TabOrder.ALPHABETICAL));
+        dropDown.add(getAbstractAction("Order chronologically", () -> SettingsState.getInstance().tabOrder = TabOrder.CHRONOLOGICAL));
 
         ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu("TestAction", dropDown);
         popupMenu.getComponent().show(component, x + 5, y + 5);

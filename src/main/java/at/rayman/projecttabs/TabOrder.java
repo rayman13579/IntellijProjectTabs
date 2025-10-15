@@ -4,6 +4,7 @@ package at.rayman.projecttabs;
 import com.intellij.openapi.actionSystem.AnAction;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -66,4 +67,11 @@ public enum TabOrder {
         manualOrderList.remove(projectLocation);
     }
 
+    public static void refreshManualOrderList(AnAction[] actions) {
+        manualOrderList.clear();
+        manualOrderList.addAll(Arrays.stream(actions)
+            .map(action -> ((ProjectTabAction) action).getProjectLocation())
+            .toList()
+        );
+    }
 }

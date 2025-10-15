@@ -6,8 +6,6 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
-import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
-import com.intellij.openapi.actionSystem.toolbarLayout.ToolbarLayoutStrategy;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -229,7 +227,7 @@ public class ProjectTabAction extends ToggleAction implements CustomComponentAct
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    ActionUtil.performActionDumbAwareWithCallbacks(ProjectTabAction.this, AnActionEvent.createEvent(DataManager.getInstance().getDataContext(tab), presentation, place, ActionUiKind.NONE, e));
+                    ActionUtil.performAction(ProjectTabAction.this, AnActionEvent.createEvent(DataManager.getInstance().getDataContext(tab), presentation, place, ActionUiKind.NONE, e));
                 }
                 if (e.getButton() == MouseEvent.BUTTON2) {
                     closeTab(AnActionEvent.createEvent(DataManager.getInstance().getDataContext(tab), presentation, place, ActionUiKind.NONE, e));

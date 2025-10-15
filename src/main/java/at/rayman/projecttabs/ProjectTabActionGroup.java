@@ -96,6 +96,9 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
         SettingsState settings = SettingsState.getInstance();
         if (settings != null) {
             Arrays.sort(children, settings.tabOrder.getComparator());
+            if (!TabOrder.MANUAL.equals(settings.tabOrder)) {
+                TabOrder.refreshManualOrderList(children);
+            }
         }
         return children;
     }
