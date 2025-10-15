@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        create("IC", "2025.1")
+        create("IC", "2025.2.3")
     }
     implementation(kotlin("stdlib-jdk8"))
 }

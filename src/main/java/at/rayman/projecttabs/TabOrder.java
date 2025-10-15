@@ -1,10 +1,11 @@
 package at.rayman.projecttabs;
 
+
 import com.intellij.openapi.actionSystem.AnAction;
 
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public enum TabOrder {
 
@@ -12,7 +13,8 @@ public enum TabOrder {
     CHRONOLOGICAL((tab1, tab2) -> 0),
     MANUAL(getManualComparator());
 
-    private static final Map<String, Integer> manualOrder = new HashMap<>();
+    private static final List<String> manualOrderList = new ArrayList<>();
+
     private final Comparator<AnAction> comparator;
 
     TabOrder(Comparator<AnAction> comparator) {
@@ -30,67 +32,38 @@ public enum TabOrder {
 
     private static Comparator<AnAction> getManualComparator() {
         return (tab1, tab2) -> {
-            String loc1 = ((ProjectTabAction) tab1).getProjectLocation();
-            String loc2 = ((ProjectTabAction) tab2).getProjectLocation();
-            int pos1 = manualOrder.getOrDefault(loc1, 0);
-            int pos2 = manualOrder.getOrDefault(loc2, 0);
-            return Integer.compare(pos1, pos2);
+            int index1 = manualOrderList.indexOf(((ProjectTabAction) tab1).getProjectLocation());
+            int index2 = manualOrderList.indexOf(((ProjectTabAction) tab2).getProjectLocation());
+            return Integer.compare(index1, index2);
         };
     }
 
     public static void moveTabLeft(String projectLocation) {
-        int currentIndex = manualOrder.getOrDefault(projectLocation, 0);
-        if (currentIndex > 0) {
-            String prevTabLocation = null;
-            for (Map.Entry<String, Integer> entry : manualOrder.entrySet()) {
-                if (entry.getValue() == currentIndex - 1) {
-                    prevTabLocation = entry.getKey();
-                    break;
-                }
-            }
-
-            if (prevTabLocation != null) {
-                manualOrder.put(projectLocation, currentIndex - 1);
-                manualOrder.put(prevTabLocation, currentIndex);
-            }
+        int currentIndex = manualOrderList.indexOf(projectLocation);
+        if (currentIndex <= 0 || currentIndex >= manualOrderList.size()) {
+            return;
         }
+        String previousTabLocation = manualOrderList.get(currentIndex - 1);
+        manualOrderList.set(currentIndex, previousTabLocation);
+        manualOrderList.set(currentIndex - 1, projectLocation);
     }
 
     public static void moveTabRight(String projectLocation) {
-        int currentIndex = manualOrder.getOrDefault(projectLocation, 0);
-        int maxIndex = -1;
-
-        for (int index : manualOrder.values()) {
-            if (index > maxIndex) {
-                maxIndex = index;
-            }
+        int currentIndex = manualOrderList.indexOf(projectLocation);
+        if (currentIndex < 0 || currentIndex >= manualOrderList.size() - 1) {
+            return;
         }
-
-        if (currentIndex < maxIndex) {
-            String nextTabLocation = null;
-            for (Map.Entry<String, Integer> entry : manualOrder.entrySet()) {
-                if (entry.getValue() == currentIndex + 1) {
-                    nextTabLocation = entry.getKey();
-                    break;
-                }
-            }
-
-            if (nextTabLocation != null) {
-                manualOrder.put(projectLocation, currentIndex + 1);
-                manualOrder.put(nextTabLocation, currentIndex);
-            }
-        }
+        String nextTabLocation = manualOrderList.get(currentIndex + 1);
+        manualOrderList.set(currentIndex, nextTabLocation);
+        manualOrderList.set(currentIndex + 1, projectLocation);
     }
 
-    public static void registerTab(String projectLocation) {
-        if (!manualOrder.containsKey(projectLocation)) {
-            int maxIndex = -1;
-            for (int index : manualOrder.values()) {
-                if (index > maxIndex) {
-                    maxIndex = index;
-                }
-            }
-            manualOrder.put(projectLocation, maxIndex + 1);
-        }
+    public static void addTab(String projectLocation) {
+        manualOrderList.add(projectLocation);
     }
+
+    public static void removeTab(String projectLocation) {
+        manualOrderList.remove(projectLocation);
+    }
+
 }

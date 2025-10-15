@@ -36,8 +36,7 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
             setDuplicateProjectName(projectTabAction);
         }
 
-        TabOrder.registerTab(projectLocation);
-
+        TabOrder.addTab(projectLocation);
         add(projectTabAction);
     }
 
@@ -47,6 +46,7 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
             return;
         }
 
+        TabOrder.removeTab(project.getPresentableUrl());
         remove(projectTabAction);
 
         if (SettingsState.getInstance().focusLastProject) {
@@ -93,7 +93,10 @@ public class ProjectTabActionGroup extends IdeDependentActionGroup {
     @Override
     public AnAction @NotNull [] getChildren(@Nullable AnActionEvent event) {
         AnAction[] children = super.getChildren(ActionManager.getInstance());
-        Arrays.sort(children, SettingsState.getInstance().tabOrder.getComparator());
+        SettingsState settings = SettingsState.getInstance();
+        if (settings != null) {
+            Arrays.sort(children, settings.tabOrder.getComparator());
+        }
         return children;
     }
 

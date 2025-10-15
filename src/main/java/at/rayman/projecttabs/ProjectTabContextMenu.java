@@ -1,5 +1,6 @@
 package at.rayman.projecttabs;
 
+import at.rayman.projecttabs.settings.SettingsState;
 import com.intellij.openapi.actionSystem.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,6 +17,9 @@ public class ProjectTabContextMenu {
    //     dropDown.add(getAbstractAction("Close All Projects", () -> closeAllTabs(e)));
         dropDown.add(getAbstractAction("Close Projects to the Left", () -> closeTabsToTheLeft(tab, e)));
         dropDown.add(getAbstractAction("Close Projects to the Right", () -> closeTabsToTheRight(tab, e)));
+        dropDown.addSeparator();
+        dropDown.add(getAbstractAction("Sort alphabetically", () -> SettingsState.getInstance().tabOrder = TabOrder.ALPHABETICAL));
+        dropDown.add(getAbstractAction("Sort chronologically", () -> SettingsState.getInstance().tabOrder = TabOrder.CHRONOLOGICAL));
 
         ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu("TestAction", dropDown);
         popupMenu.getComponent().show(component, x + 5, y + 5);
