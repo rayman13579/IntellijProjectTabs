@@ -1,47 +1,49 @@
 plugins {
-    id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.22"
-    id("org.jetbrains.intellij") version "1.17.2"
+    id("org.jetbrains.intellij.platform") version "2.5.0"
+    kotlin("jvm")
 }
 
 group = "at.rayman"
-version = "1.3"
+version = "1.6"
 
 repositories {
     mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    version.set("2023.2.5")
-    type.set("IC") // Target IDE Platform
-
-    plugins.set(listOf(/* Plugin Dependencies */))
+dependencies {
+    intellijPlatform {
+        create("IU", "2025.2.3")
+    }
+    implementation(kotlin("stdlib-jdk8"))
 }
 
-tasks {
-    // Set the JVM compatibility versions
-    withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+intellijPlatform {
+    pluginConfiguration {
+        name = "ProjectTabs"
     }
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+    pluginVerification {
+        ides {
+            select {
+                sinceBuild = "252"
+                untilBuild = ""
+            }
+        }
     }
-
-    patchPluginXml {
-        sinceBuild.set("232")
-        untilBuild.set("242.*")
-    }
-
-    signPlugin {
+    signing {
         certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
         privateKey.set(System.getenv("PRIVATE_KEY"))
         password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
     }
 
-    publishPlugin {
+    publishing {
         token.set(System.getenv("PUBLISH_TOKEN"))
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
