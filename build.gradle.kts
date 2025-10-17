@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        create("IC", "2025.1")
+        create("IU", "2025.2.3")
     }
     implementation(kotlin("stdlib-jdk8"))
 }
@@ -28,7 +28,7 @@ intellijPlatform {
     pluginVerification {
         ides {
             select {
-                sinceBuild = "243"
+                sinceBuild = "252"
                 untilBuild = ""
             }
         }
